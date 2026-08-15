@@ -23,7 +23,7 @@ Fork of [linter](https://github.com/steelbrain/linter) and [linter-ui-default](h
 
 ## Installation
 
-To install `linter-bundle` search for [linter-bundle](https://web.pulsar-edit.dev/packages/linter-bundle) in the Install pane of the Pulsar settings or run `ppm install linter-bundle`. Alternatively, you can run `ppm install asiloisad/pulsar-linter-bundle` to install a package directly from the GitHub repository.
+To install `linter-bundle` search for [linter-bundle](https://web.pulsar-edit.dev/packages/linter-bundle) in the Install pane of the Pulsar settings or run `ppm install linter-bundle`. Alternatively, you can run `ppm install asiloisad-pulsar/linter-bundle` to install a package directly from the GitHub repository.
 
 ## Commands
 
