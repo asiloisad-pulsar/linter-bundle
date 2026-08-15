@@ -2,7 +2,7 @@
 
 A unified linting package that combines linting infrastructure with an integrated UI.
 
-![panel](https://github.com/asiloisad/pulsar-linter-bundle/blob/master/assets/panel.png?raw=true)
+![panel](https://github.com/asiloisad-pulsar/linter-bundle/blob/master/assets/panel.png?raw=true)
 
 Fork of [linter](https://github.com/steelbrain/linter) and [linter-ui-default](https://github.com/steelbrain/linter-ui-default).
 
@@ -16,10 +16,10 @@ Fork of [linter](https://github.com/steelbrain/linter) and [linter-ui-default](h
 - **Multiple Sort Methods**: Sort by severity, position, or provider. Cell index is used as a primary sort key for notebook messages.
 - **Linter Management**: Enable/disable individual linter providers.
 - **Jupyter Notebook support**: Works with `.ipynb` files via the `linter-adapter` service. Messages are mapped to individual cells and the panel shows `[cell]:line:col` position.
-- **Scrollmap**: Shows linter markers in the scrollbar via [scrollmap](https://github.com/asiloisad/pulsar-scrollmap).
-- **Reference links**: Clickable references in messages to open related files. See [latex-tools](https://github.com/asiloisad/pulsar-latex-tools) for usage example.
+- **Scrollmap**: Shows linter markers in the scrollbar via [scrollmap](https://github.com/asiloisad-pulsar/scrollmap).
+- **Reference links**: Clickable references in messages to open related files. See [latex-tools](https://github.com/asiloisad-pulsar/latex-tools) for usage example.
 - **Markdown rendering**: Message excerpts support markdown formatting in tooltips and panel.
-- **MCP Tool**: Provides `GetLinterMessages` tool via [pulsar-mcp](https://github.com/asiloisad/pulsar-pulsar-mcp).
+- **MCP Tool**: Provides `GetLinterMessages` tool via [pulsar-mcp](https://github.com/asiloisad-pulsar/pulsar-mcp).
 
 ## Installation
 
@@ -123,7 +123,7 @@ module.exports = {
 
 ## Provided Service `mcp-tools`
 
-Provides MCP tools for [pulsar-mcp](https://github.com/asiloisad/pulsar-pulsar-mcp). The service currently exposes `GetLinterMessages`, a read-only tool that returns diagnostics from the linter panel.
+Provides MCP tools for [pulsar-mcp](https://github.com/asiloisad-pulsar/pulsar-mcp). The service currently exposes `GetLinterMessages`, a read-only tool that returns diagnostics from the linter panel.
 
 With no arguments the tool follows the current linter panel view mode:
 

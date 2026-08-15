@@ -3,7 +3,7 @@
   "main": "./lib/main.js",
   "version": "2.6.0",
   "description": "A unified linting package that combines linting infrastructure with an integrated UI",
-  "repository": "https://github.com/asiloisad/pulsar-linter-bundle",
+  "repository": "https://github.com/asiloisad-pulsar/linter-bundle",
   "license": "MIT",
   "keywords": [
     "linter",
