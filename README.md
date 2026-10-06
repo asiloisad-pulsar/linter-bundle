@@ -121,6 +121,26 @@ module.exports = {
 };
 ```
 
+## Programmatic linting
+
+The package exports two awaitable methods on its active `mainModule`:
+
+- `lintEditor(editor)` runs a lint pass for an existing TextEditor.
+- `lintBuffer(buffer)` uses an open editor for the buffer, or a temporary editor
+  containing a snapshot of its text, path and grammar. The temporary editor is
+  destroyed after the pass; the caller's buffer is neither retained nor destroyed.
+  Results stay associated with the original buffer and are cleared when it is destroyed.
+
+Both methods wait for providers and flush the message registry before resolving.
+They return `false` when the package is inactive or the editor/buffer is invalid,
+or when the registry skips the pass because of ignored paths or preview-tab settings.
+A `true` result means a pass ran; providers can still skip a file or fail.
+
+Await one of these methods before reading `GetLinterMessages` after a programmatic
+edit. Reading the tool flushes results already received from providers, but does
+not start or await a lint pass. Providers used by `lintBuffer` must support editors
+outside workspace panes.
+
 ## Provided Service `mcp-tools`
 
 Provides MCP tools for [pulsar-mcp](https://github.com/asiloisad-pulsar/pulsar-mcp). The service currently exposes `GetLinterMessages`, a read-only tool that returns diagnostics from the linter panel.
