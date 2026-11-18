@@ -2,6 +2,9 @@
 
 A unified linting package that combines linting infrastructure with an integrated UI.
 
+> [!NOTE]
+> This package is in maintenance mode. If you use [Lumine](https://github.com/lumine-code/lumine), you may be interested in [linter](https://github.com/lumine-code/linter) and [diagnostics](https://github.com/lumine-code/diagnostics).
+
 ![panel](https://github.com/asiloisad-pulsar/linter-bundle/blob/master/assets/panel.png?raw=true)
 
 Fork of [linter](https://github.com/steelbrain/linter) and [linter-ui-default](https://github.com/steelbrain/linter-ui-default).
