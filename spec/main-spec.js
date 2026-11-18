@@ -2,6 +2,8 @@ const path = require("path");
 const { TextBuffer } = require("atom");
 const main = require("../lib/main");
 const Helpers = require("../lib/helpers");
+const Linter = require("../lib/linter-main");
+const LinterUI = require("../lib/linter-ui");
 const MessageRegistry = require("../lib/message-registry");
 
 function createMessage(editor, excerpt = editor.getText()) {
@@ -14,6 +16,88 @@ function createMessage(editor, excerpt = editor.getText()) {
     },
   };
 }
+
+describe("Linter service lifecycle", () => {
+  let linter;
+  let adapter;
+
+  beforeEach(() => {
+    atom.config.set("linter-bundle.lintOnOpen", false);
+    atom.config.set("linter-bundle.disabledProviders", []);
+    linter = {
+      name: "Lifecycle test",
+      scope: "file",
+      lintsOnChange: false,
+      grammarScopes: ["*"],
+      lint: (editor) => [createMessage(editor)],
+    };
+    adapter = { handlesItem: () => false };
+    main.activate();
+  });
+
+  afterEach(() => {
+    main.deactivate();
+  });
+
+  it("allows the service hub to dispose a linter after the bundle deactivates", () => {
+    const { serviceHub } = atom.packages;
+    const consumer = serviceHub.consume("linter-bundle-spec", "2.0.0", main.consumeLinter);
+    const provider = serviceHub.provide("linter-bundle-spec", "2.0.0", linter);
+
+    consumer.dispose();
+    main.deactivate();
+
+    expect(() => provider.dispose()).not.toThrow();
+  });
+
+  it("allows an item adapter to be disposed after the bundle deactivates", () => {
+    const registration = main.consumeItemLinterAdapter(adapter);
+    main.deactivate();
+
+    expect(() => registration.dispose()).not.toThrow();
+  });
+
+  it("preserves a re-registered linter when its previous registration is disposed", async () => {
+    spyOn(Helpers, "isPathIgnored").andReturn(Promise.resolve(false));
+    const previous = main.consumeLinter(linter);
+    main.deactivate();
+    main.activate();
+    const current = main.consumeLinter(linter);
+    const filePath = path.join(process.cwd(), "lifecycle.txt");
+    const buffer = new TextBuffer({ text: "Lint after reactivation", filePath });
+    const getMessages = main.provideMcpTools().find((tool) => tool.name === "GetLinterMessages");
+
+    try {
+      previous.dispose();
+      await main.lintBuffer(buffer);
+      expect(getMessages.execute({ filePath }).messages.map((message) => message.excerpt)).toEqual([
+        "Lint after reactivation",
+      ]);
+
+      current.dispose();
+      expect(getMessages.execute({ filePath }).messages).toEqual([]);
+    } finally {
+      buffer.destroy();
+    }
+  });
+
+  it("preserves a re-registered item adapter when its previous registration is disposed", () => {
+    const previous = main.consumeItemLinterAdapter(adapter);
+    main.deactivate();
+    main.activate();
+    const current = main.consumeItemLinterAdapter(adapter);
+    const removeFromCore = spyOn(Linter.prototype, "removeItemAdapter").andCallThrough();
+    const removeFromUI = spyOn(LinterUI.prototype, "removeItemAdapter").andCallThrough();
+
+    previous.dispose();
+    expect(removeFromCore).not.toHaveBeenCalled();
+    expect(removeFromUI).not.toHaveBeenCalled();
+
+    current.dispose();
+    expect(removeFromCore).toHaveBeenCalledWith(adapter);
+    expect(removeFromUI).toHaveBeenCalledWith(adapter);
+  });
+});
 
 describe("Programmatic linting", () => {
   let buffers;
